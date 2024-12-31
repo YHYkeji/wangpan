@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网盘拉新链接生成丨YHY科技</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'PingFang SC', 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f5f5;
+        }
+ 
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 100%; /* 容器宽度不超过屏幕 */
+            width: 100%;
+            box-sizing: border-box; /* 确保内边距不会影响总宽度 */
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+ 
+        .container h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            word-wrap: break-word;
+        }
+ 
+        .container p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+ 
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+ 
+        .btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            color: white;
+            background-color: #ff6a00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+ 
+        .btn:hover {
+            background-color: #e65c00;
+        }
+ 
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+ 
+        /* 新增按钮颜色样式 */
+        .btn-green {
+            background-color: #28a745 !important;
+        }
+ 
+        .btn-blue {
+            background-color: #c4c400 !important; 
+        }
+ 
+        #copyBtn {
+            display: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
+ 
+        #copyBtn:hover {
+            background-color: #0056b3;
+        }
+ 
+        #copyStatus {
+            color: green;
+            font-size: 16px;
+            margin-top: 10px;
+            display: none;
+        }
+ 
+        #output {
+            margin-top: 20px;
+            font-size: 14px;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+ 
+        .output-link {
+            color: #007bff;
+            text-decoration: none;
+            word-break: break-word;
+            display: block;
+            margin-top: 10px;
+        }
+ 
+        /* 媒体查询：针对手机屏幕调整布局 */
+        @media (max-width: 767px) {
+            .container {
+                padding: 20px;
+                margin: 0 10px;
+            }
+ 
+            .container h1 {
+                font-size: 20px; /* 较小屏幕的标题 */
+            }
+ 
+            .container p {
+                font-size: 14px; /* 较小屏幕的文本 */
+            }
+ 
+            .btn, #copyBtn {
+                width: 100%; /* 按钮宽度撑满屏幕 */
+                font-size: 14px; /* 按钮文本大小适应小屏幕 */
+            }
+ 
+            #output {
+                word-wrap: break-word; /* 保证长链接自动换行 */
+            }
+        }
+    </style>
+</head>
+<body>
+ 
+    <div class="container">
+        <h1>生成网盘链接</h1>
+        <p>请输入网盘链接：</p>
+        <input type="text" id="quarkLink" class="input-field" placeholder="输入网盘链接" />
+        <button class="btn" onclick="generateEncryptedLink()" id="generateBtn">生成分享链接</button>
+        <button class="btn btn-green" onclick="window.location.href='https://www.kdocs.cn/l/cpQrv8L0ybsq'">更多资源下载</button>
+        <button class="btn btn-blue" onclick="window.location.href='https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzkzMTY0NzM3Mw==&action=getalbum&album_id=3525339430170820614&scene=173&subscene=&sessionid=svr_fe2ef7388b7&enterid=1720403734&from_msgid=2247483765&from_itemidx=1&count=3&nolastread=1#wechat_redirect'">关注公众号</button>
+        <p id="output" style="margin-top: 20px;"></p>
+        <button id="copyBtn" onclick="copyLink()">复制链接</button>
+        <p id="copyStatus">链接已复制到剪贴板！</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.js"></script>
+    <script>
+                /*
+ * 这是一块遮羞布，仅供个人使用！更多资源
+ */
+var _0xodc='jsjiami.com.v7';(function(_0x431978,_0x44fc9e,_0x13fea8,_0x2f7150,_0x3e11a0,_0x3d1448,_0x438964){return _0x431978=_0x431978>>0x8,_0x3d1448='hs',_0x438964='hs',function(_0x248bdb,_0x5cfee9,_0x2a3f12,_0x2d0c69,_0xa71b41){var _0x7c8b8c=_0x11a9;_0x2d0c69='tfi',_0x3d1448=_0x2d0c69+_0x3d1448,_0xa71b41='up',_0x438964+=_0xa71b41,_0x3d1448=_0x2a3f12(_0x3d1448),_0x438964=_0x2a3f12(_0x438964),_0x2a3f12=0x0;var _0x3577a6=_0x248bdb();while(!![]&&--_0x2f7150+_0x5cfee9){try{_0x2d0c69=parseInt(_0x7c8b8c(0x1cd,'phw5'))/0x1+-parseInt(_0x7c8b8c(0x1c3,'dPMo'))/0x2+-parseInt(_0x7c8b8c(0x1dd,'i(ql'))/0x3+parseInt(_0x7c8b8c(0x1f4,'0*NF'))/0x4*(parseInt(_0x7c8b8c(0x1b9,'otKy'))/0x5)+-parseInt(_0x7c8b8c(0x1bf,'M6kT'))/0x6+parseInt(_0x7c8b8c(0x1e5,'Hkr['))/0x7*(-parseInt(_0x7c8b8c(0x1d5,'vt]S'))/0x8)+-parseInt(_0x7c8b8c(0x1cb,')3r['))/0x9*(-parseInt(_0x7c8b8c(0x1cf,'s(sy'))/0xa);}catch(_0x52e3dd){_0x2d0c69=_0x2a3f12;}finally{_0xa71b41=_0x3577a6[_0x3d1448]();if(_0x431978<=_0x2f7150)_0x2a3f12?_0x3e11a0?_0x2d0c69=_0xa71b41:_0x3e11a0=_0xa71b41:_0x2a3f12=_0xa71b41;else{if(_0x2a3f12==_0x3e11a0['replace'](/[LyABPtEpuVHNxCIgOYh=]/g,'')){if(_0x2d0c69===_0x5cfee9){_0x3577a6['un'+_0x3d1448](_0xa71b41);break;}_0x3577a6[_0x438964](_0xa71b41);}}}}}(_0x13fea8,_0x44fc9e,function(_0x44dc06,_0x1bfa7e,_0x22e80f,_0x4c89a0,_0x1c6a11,_0x29d448,_0x6159fa){return _0x1bfa7e='\x73\x70\x6c\x69\x74',_0x44dc06=arguments[0x0],_0x44dc06=_0x44dc06[_0x1bfa7e](''),_0x22e80f='\x72\x65\x76\x65\x72\x73\x65',_0x44dc06=_0x44dc06[_0x22e80f]('\x76'),_0x4c89a0='\x6a\x6f\x69\x6e',(0x190f66,_0x44dc06[_0x4c89a0](''));});}(0xcc00,0x22cd4,_0x1f6e,0xce),_0x1f6e)&&(_0xodc=_0x1f6e);function encryptLink(_0x565935){var _0x28c104=_0x11a9,_0x4fb111={'GVkAA':_0x28c104(0x1d3,'$j)*')},_0x15b9d8=CryptoJS[_0x28c104(0x1b7,'Gvmz')]['encrypt'](_0x565935,_0x4fb111['GVkAA'])[_0x28c104(0x1d4,'9U92')]();return _0x15b9d8;}function _0x11a9(_0x184338,_0x37c5d8){var _0x1f6ef6=_0x1f6e();return _0x11a9=function(_0x11a912,_0x390046){_0x11a912=_0x11a912-0x19f;var _0x12a028=_0x1f6ef6[_0x11a912];if(_0x11a9['eCxvQp']===undefined){var _0x53e315=function(_0x3c6dc8){var _0x5c10d3='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x5ec864='',_0xac79d2='';for(var _0x2a152d=0x0,_0x5604ac,_0x281ce1,_0x4b7362=0x0;_0x281ce1=_0x3c6dc8['charAt'](_0x4b7362++);~_0x281ce1&&(_0x5604ac=_0x2a152d%0x4?_0x5604ac*0x40+_0x281ce1:_0x281ce1,_0x2a152d++%0x4)?_0x5ec864+=String['fromCharCode'](0xff&_0x5604ac>>(-0x2*_0x2a152d&0x6)):0x0){_0x281ce1=_0x5c10d3['indexOf'](_0x281ce1);}for(var _0x534c3a=0x0,_0x3b4c52=_0x5ec864['length'];_0x534c3a<_0x3b4c52;_0x534c3a++){_0xac79d2+='%'+('00'+_0x5ec864['charCodeAt'](_0x534c3a)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0xac79d2);};var _0x4a2d14=function(_0x4520a6,_0x1e14a8){var _0x2becc4=[],_0x4dec39=0x0,_0x170865,_0x4e3c05='';_0x4520a6=_0x53e315(_0x4520a6);var _0x12434d;for(_0x12434d=0x0;_0x12434d<0x100;_0x12434d++){_0x2becc4[_0x12434d]=_0x12434d;}for(_0x12434d=0x0;_0x12434d<0x100;_0x12434d++){_0x4dec39=(_0x4dec39+_0x2becc4[_0x12434d]+_0x1e14a8['charCodeAt'](_0x12434d%_0x1e14a8['length']))%0x100,_0x170865=_0x2becc4[_0x12434d],_0x2becc4[_0x12434d]=_0x2becc4[_0x4dec39],_0x2becc4[_0x4dec39]=_0x170865;}_0x12434d=0x0,_0x4dec39=0x0;for(var _0x5167ea=0x0;_0x5167ea<_0x4520a6['length'];_0x5167ea++){_0x12434d=(_0x12434d+0x1)%0x100,_0x4dec39=(_0x4dec39+_0x2becc4[_0x12434d])%0x100,_0x170865=_0x2becc4[_0x12434d],_0x2becc4[_0x12434d]=_0x2becc4[_0x4dec39],_0x2becc4[_0x4dec39]=_0x170865,_0x4e3c05+=String['fromCharCode'](_0x4520a6['charCodeAt'](_0x5167ea)^_0x2becc4[(_0x2becc4[_0x12434d]+_0x2becc4[_0x4dec39])%0x100]);}return _0x4e3c05;};_0x11a9['UMXLYl']=_0x4a2d14,_0x184338=arguments,_0x11a9['eCxvQp']=!![];}var _0x267096=_0x1f6ef6[0x0],_0x57e425=_0x11a912+_0x267096,_0xfdcc94=_0x184338[_0x57e425];return!_0xfdcc94?(_0x11a9['UhxiDx']===undefined&&(_0x11a9['UhxiDx']=!![]),_0x12a028=_0x11a9['UMXLYl'](_0x12a028,_0x390046),_0x184338[_0x57e425]=_0x12a028):_0x12a028=_0xfdcc94,_0x12a028;},_0x11a9(_0x184338,_0x37c5d8);}function _0x1f6e(){var _0x3fe56c=(function(){return[_0xodc,'yOpjHsjOihBaOmxiC.cVYogYmN.CAuvPL7gEIgtP==','W7XUWOBcKX4','WQrlW5zqBhFcHCkjia','WP1biqvtW7dcOr3cIq','WOniWQushs0aWQ/cPLKcW6r5nMFdQ8ke','WPJdRCoggaVdGmkM','W61aWRVcKwG','WPNdQmoWoX8','WPBcLmoDWPDMtmo2WPman3uzeq','55wB5OI55lMEWQ4BWO4','WOBdNmoiamkZomkjsConeezykCkn','WQBdVab/gJhdJhqKWPGrtmke','uvtcUuGt','W7LoWRpcNq','zZacWO3cNmkkyCoOlxnD','WQj3o1K','v1VdJu4Q','qZlcNgLcWPtcUsJdP8oVW7urW7WU','WQxdSCoOf8kh','WRrzW7LSca','WRDvW7LLnq','W7X2WQ7cSKi','A8keW53cTHa','WRpcKCo/rmoeW6DrWQlcRmobiW9l','ALGbW5dcUCovsNu','urC+WRdcPG','W7rGWOOhuCk0WPVcI8oBWOVcMCoWW7dcHW','pIldM8oKmG','oIldMmoppbOZWOSu','WOBcG8omWQv3rCowWPWrm38zn8oVW7DRzW','W4yWaLC','WQvqW4fghW','WP9wW6KjrcrtWRldVuzzW7vNiIldUSoFcbldJYCrW4y'].concat((function(){return['W7afoMzy','W5GACmomWPDkb8kpqulcTW','W5CHjffnW7VcKa','W7W3pH4','WPbooWfsW4hcSa','AIKCWOm','WRpdIqu4W47cR15vWONcNZZdJq','W7NcUfS','WOP/gfmMwmkQrXS+rX3dUZdcQmoQW6DZBeVdTmobtSk7WQmNu8kXWO55aCoGnXqyB8orWRO','WPXRwWC9B8k/qL5S','smk1DMXMW4idjmonWOe','WQvGoKnxzmkqWQZcSSkBW7u','W6qEjHJdQte2','W4FdP0rQwW','WONdVCoAW5e1','WR4/W5ldRKNdHSosW6VcKrZdIHCD','WODBnGXe','tmk/CLbzW5mpnCowWOzIA8oLW78','mNDgW57dHSkiCmowhvny','WRpcKSo3rCojW6WsWRhcHSofjtq','ladcMmkKW48','W59bW6qExIu','DY8FW4m','sIBcGqzIW6tcOG','WODuAIm','5lQb5BcJ576355U/5OU95PAG5yUQ5lMt6zk75O+F77Yppf7cQchcLcGJWRtcJa','55sq5OUE5yQm5lMW6zk+5O+1','pCo3WRJdRhCsW7PtWOVcSGG','W54+aeCX','WQOwW6BdKt1VWRufkmk1W7ZcTq','eSkoqmo/tmoP','WRuNh1u9fSo7jrBcSG','W6xdGCkOfSkdWR8tWQdcI8oZoq','WQabW5vBbgZdMCkeFqyJFaJdThJcMNK'].concat((function(){return['W6VcKfPOWOZdJNbdWRu','yY4rWPRcI8kEvSoPk3euWPryWRy','ktpdQIHAh2L0','W5xcJSkiC8oRo8k2ESo6kgu','EvnzWPNdJW','oMRcKdVdPYPMWRLeWPe3WOvHW5O','W6hdI8k2cSkIWQOgWRhcVmo0','W5VcUmoFkmk+WRldLmoDBq','EfRdH8kWW7W+WQfvWRi','AJmgW5S/','W6q9aGxdLq','WRfbzfdcTMGPtmoZDttcQq','BfmvW6NcUq','vYFcHevA','WPhcOmo+W5pcVZdcNSoZWOrQW6xdN1hcRmokW4WEvI5UW4HZfW','W7asWOjE','WPv4FSoglSovDW','WOJdT8oIW4CzWOy','z18cW4tcRW','mw5oW5K/i8oRW5b+','W4hcOSoiiCkP','FbZcPa1b','W7LnWRJcH2y','veq1gmoE','WPzlyJmF','WQ/dPCoVW7aT','WQ3cRmoIW4FcTq','W7DwwqaR','E8kfW4ZcUqu','W7FdR0b6','W7LxWPNcOMy','W6VcKfHKWPddVZHzWQ3cVrNdTq','W6FdPurqtIhcN2TJWO1kxSoJWRhcKSoqW7a'];}()));}()));}());_0x1f6e=function(){return _0x3fe56c;};return _0x1f6e();};function generateEncryptedLink(){var _0x17933a=_0x11a9,_0x427840={'elESx':_0x17933a(0x1d1,'0*NF'),'DHTRX':_0x17933a(0x1c7,'0qg)'),'dJWmP':_0x17933a(0x1ba,'PwI4'),'VMlqr':_0x17933a(0x1c4,'j^2p'),'foQXj':_0x17933a(0x1ef,'MkIZ'),'Txhdy':_0x17933a(0x1ab,'3aMW'),'UAlxO':_0x17933a(0x1d0,'dPMo'),'sLvMx':_0x17933a(0x1c5,'vlaX'),'LGoHx':_0x17933a(0x1fb,'SMc7'),'bbgXb':function(_0x45f27c,_0x413b89){return _0x45f27c!==_0x413b89;},'WWLXT':_0x17933a(0x1bd,'MkIZ'),'uNKnj':_0x17933a(0x1e0,'EPc]'),'goWcy':function(_0x2541c4,_0x4302d3){return _0x2541c4+_0x4302d3;},'tKFbE':_0x17933a(0x1af,'vlaX'),'sdmJb':function(_0x4d5352,_0x1bed24){return _0x4d5352(_0x1bed24);},'gWyVO':_0x17933a(0x1f1,'[pQ4'),'bvNFk':function(_0x332c50,_0x30b106){return _0x332c50+_0x30b106;},'TwaRW':function(_0x32fe01,_0x173a79){return _0x32fe01+_0x173a79;},'LDQgP':_0x17933a(0x1c9,'0*NF'),'UUUra':_0x17933a(0x1b3,'5kEv'),'uubYe':'请输入网盘链接。','tKrlx':_0x17933a(0x1ca,')3r[')},_0x968b31=document['getElementById'](_0x427840[_0x17933a(0x1ec,'EPc]')])['value'][_0x17933a(0x1c6,'Hkr[')](),_0x3b18ea=document['getElementById'](_0x427840[_0x17933a(0x1a2,'2qAd')]),_0x3e5c6c=document['getElementById'](_0x427840[_0x17933a(0x1ae,'2qAd')]),_0x3dfefc=document[_0x17933a(0x1a0,')lye')](_0x427840['sLvMx']),_0x19dac4=document[_0x17933a(0x1a9,'fVL2')](_0x427840[_0x17933a(0x1a5,')3r[')]);_0x3b18ea[_0x17933a(0x1a7,'!ZNL')]=!![],_0x3b18ea[_0x17933a(0x1f5,'rMd&')]=_0x427840['LGoHx'];if(_0x968b31){if(_0x427840[_0x17933a(0x1de,'!ZNL')](_0x427840[_0x17933a(0x1a8,'$j)*')],'Sgtip')){var _0x29ae93=_0x427840[_0x17933a(0x1f9,'pI5[')]['split']('|'),_0x30e93f=0x0;while(!![]){switch(_0x29ae93[_0x30e93f++]){case'0':_0x4f6020[_0x17933a(0x1e1,'0*NF')][_0x17933a(0x200,'$j)*')](_0x13dfc8);continue;case'1':_0x150c1f[_0x17933a(0x201,'5kEv')]['removeChild'](_0x13dfc8);continue;case'2':var _0x5d6d2d=_0x2a4fb3[_0x17933a(0x1c1,'PwI4')](_0x427840[_0x17933a(0x1a1,'vt]S')])['dataset'][_0x17933a(0x1b5,'$j)*')];continue;case'3':var _0x13dfc8=_0x324f89[_0x17933a(0x1fa,'lvuZ')](_0x17933a(0x1e4,'!ZNL'));continue;case'4':_0x3a6907['getElementById'](_0x427840[_0x17933a(0x1dc,'i(ql')])[_0x17933a(0x1fe,'G471')][_0x17933a(0x1f7,'pI5[')]=_0x427840[_0x17933a(0x1a3,'2qAd')];continue;case'5':_0x13dfc8[_0x17933a(0x1cc,'otKy')]=_0x5d6d2d;continue;case'6':_0x13dfc8[_0x17933a(0x1f2,'MkIZ')](0x0,0x1869f);continue;case'7':_0xec48b8[_0x17933a(0x1bb,'5kEv')](_0x427840['foQXj']);continue;case'8':_0x13dfc8[_0x17933a(0x1ce,'JQ8I')]();continue;}break;}}else{var _0x1071d0=_0x17933a(0x1fd,'MkIZ')[_0x17933a(0x1df,')lye')]('|'),_0x4a3c3a=0x0;while(!![]){switch(_0x1071d0[_0x4a3c3a++]){case'0':var _0x368b1a=_0x427840[_0x17933a(0x1e9,'pRSj')];continue;case'1':var _0xcf995d=_0x427840[_0x17933a(0x19f,'eU^b')](_0x368b1a+_0x427840[_0x17933a(0x1ee,')3r[')],encodeURIComponent(_0x27190d));continue;case'2':var _0x27190d=_0x427840[_0x17933a(0x1f3,'M6kT')](encryptLink,_0x968b31);continue;case'3':_0x3e5c6c[_0x17933a(0x1e6,'LPIx')][_0x17933a(0x1bc,'i(ql')]=_0x427840[_0x17933a(0x1a4,'phw5')];continue;case'4':_0x3e5c6c[_0x17933a(0x1b4,'rMd&')]['link']=_0xcf995d;continue;case'5':_0x19dac4[_0x17933a(0x1d6,'^K0S')]['display']=_0x17933a(0x1ad,'otKy');continue;case'6':_0x3dfefc[_0x17933a(0x1d9,'LPIx')]=_0x427840[_0x17933a(0x1f0,'phw5')](_0x427840[_0x17933a(0x1eb,'Axk&')](_0x427840['LDQgP'],_0xcf995d)+_0x17933a(0x1b8,'otKy'),_0xcf995d)+_0x427840[_0x17933a(0x1e7,'0qg)')];continue;}break;}}}else _0x427840[_0x17933a(0x1f3,'M6kT')](alert,_0x427840[_0x17933a(0x1aa,'3aMW')]);_0x3b18ea['disabled']=![],_0x3b18ea[_0x17933a(0x1d2,'[pQ4')]=_0x427840['tKrlx'];}function copyLink(){var _0x40a174=_0x11a9,_0x241ce7={'sBwee':_0x40a174(0x1f6,'vlaX'),'roTsO':_0x40a174(0x1db,'Hkr['),'CEjVf':_0x40a174(0x1e8,'phw5')},_0x2b8094=_0x241ce7[_0x40a174(0x1ed,'s(sy')][_0x40a174(0x1ea,']CeN')]('|'),_0xd18f2b=0x0;while(!![]){switch(_0x2b8094[_0xd18f2b++]){case'0':document[_0x40a174(0x1b1,'D8nl')]('copy');continue;case'1':document[_0x40a174(0x1c8,']CeN')]['removeChild'](_0x1c535e);continue;case'2':_0x1c535e[_0x40a174(0x1e3,'Axk&')]();continue;case'3':var _0x28aad3=document[_0x40a174(0x1fc,'vt]S')]('copyBtn')[_0x40a174(0x1b2,'5MW4')]['link'];continue;case'4':_0x1c535e[_0x40a174(0x1ac,'lvuZ')](0x0,0x1869f);continue;case'5':var _0x1c535e=document['createElement'](_0x241ce7[_0x40a174(0x1be,'Axk&')]);continue;case'6':document[_0x40a174(0x1ff,'phw5')]['appendChild'](_0x1c535e);continue;case'7':document[_0x40a174(0x1d7,']g3h')](_0x40a174(0x1d8,'dPMo'))[_0x40a174(0x1c0,'rMd&')][_0x40a174(0x1e2,'@1w[')]=_0x241ce7[_0x40a174(0x1b0,'5MW4')];continue;case'8':_0x1c535e[_0x40a174(0x1f8,'phw5')]=_0x28aad3;continue;}break;}}var version_ = 'jsjiami.com.v7';
+    const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1 && node.textContent && node.textContent.startsWith('https://pan.1231888.com/bygoukaicom.html?link=')) {
+                            // 修改链接前缀
+                            node.textContent = node.textContent.replace('https://pan.1231888.com/bygoukaicom.html?link=', 'http://localhost/xiazai.html?link=');
+                        }
+                    });
+                }
+            });
+        });
+ 
+        // 配置观察选项
+        const config = { childList: true, subtree: true };
+ 
+        // 选择需要观察变动的节点
+        const targetNode = document.getElementById('output');
+ 
+        // 开始观察变动
+        observer.observe(targetNode, config);
+ 
+        // 触发链接生成（假设这是通过点击按钮来触发的）
+        document.getElementById('generateBtn').onclick = () => {
+            generateEncryptedLink(); // 调用原有的加密链接生成函数
+ 
+            // 由于生成链接可能是异步的，我们可能需要设置一个短暂的延迟来确保链接已经被添加到 DOM 中
+            setTimeout(() => {
+                // 检查并修改链接（如果需要的话）
+                const linkNode = targetNode.querySelector('a'); // 假设链接被添加为一个 <a> 标签
+                if (linkNode && linkNode.href.startsWith('https://pan.1231888.com/bygoukaicom.html?link=')) {
+                    linkNode.href = linkNode.href.replace('https://pan.1231888.com/bygoukaicom.html?link=', 'http://localhost/xiazai.html?link=');
+                }
+            }, 100); // 延迟时间可能需要根据实际情况进行调整
+        };
+
+
+
+
+
+
+        // 24.12.26新修改：复制链接bug修复-网赚库
+       // 再有不懂的看教程，下面是修复代码，记得也改下'http://localhost/xiazai.html?link='
+       // 改成自己的网址即可，有2处，再不懂看教程！！！！！！！！
+       // 这几个斜杠可以删除的，没关系
+
+        function copyLink() {
+            var linkNode = document.querySelector('#output a');
+            if (linkNode) {
+                // 确保链接已经被修改
+                if (linkNode.href.startsWith('https://pan.1231888.com/bygoukaicom.html?link=')) {
+                    linkNode.href = linkNode.href.replace('https://pan.1231888.com/bygoukaicom.html?link=', 'http://localhost/xiazai.html?link=');
+                }
+ 
+                // 创建临时文本域来复制链接
+                var tempTextarea = document.createElement('textarea');
+                tempTextarea.value = linkNode.href;
+                document.body.appendChild(tempTextarea);
+                tempTextarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextarea);
+ 
+                // 显示复制状态
+                document.getElementById('copyStatus').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('copyStatus').style.display = 'none';
+                }, 2000); // 2秒后隐藏复制状态
+            }
+        }
+ 
+        // MutationObserver 部分保持不变
+ 
+        // 触发链接生成（假设这是通过点击按钮来触发的）
+        document.getElementById('generateBtn').onclick = () => {
+            generateEncryptedLink(); // 调用原有的加密链接生成函数
+ 
+            // 延迟以确保链接已经被添加到 DOM 中
+            setTimeout(() => {
+                // 检查并修改链接（如果需要的话）
+                const linkNode = document.getElementById('output').querySelector('a');
+                if (linkNode && linkNode.href.startsWith('https://pan.1231888.com/bygoukaicom.html?link=')) {
+                    linkNode.href = linkNode.href.replace('https://pan.1231888.com/bygoukaicom.html?link=', 'http://localhost/xiazai.html?link=');
+                }
+ 
+                // 显示复制按钮
+                document.getElementById('copyBtn').style.display = 'block';
+            }, 100); // 延迟时间可能需要根据实际情况进行调整
+        };
+    </script>
+
+</body>
+</html>
